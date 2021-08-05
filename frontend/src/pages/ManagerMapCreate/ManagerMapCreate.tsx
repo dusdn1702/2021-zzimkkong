@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import {
+  FocusEventHandler,
   FormEventHandler,
   MouseEventHandler,
   useEffect,
@@ -10,7 +11,6 @@ import {
 import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { postMap } from 'api/map';
-import { ReactComponent as EditIcon } from 'assets/svg/edit.svg';
 import { ReactComponent as ItemsIcon } from 'assets/svg/items.svg';
 import { ReactComponent as LineIcon } from 'assets/svg/line.svg';
 import { ReactComponent as MoveIcon } from 'assets/svg/move.svg';
@@ -18,7 +18,6 @@ import { ReactComponent as PolylineIcon } from 'assets/svg/polyline.svg';
 import { ReactComponent as SelectIcon } from 'assets/svg/select.svg';
 import Button from 'components/Button/Button';
 import Header from 'components/Header/Header';
-import IconButton from 'components/IconButton/IconButton';
 import Layout from 'components/Layout/Layout';
 import PALETTE from 'constants/palette';
 import PATH from 'constants/path';
@@ -259,6 +258,30 @@ const ManagerMapCreate = (): JSX.Element => {
     createMap.mutate({ mapName, mapDrawing, mapImageSvg });
   };
 
+  const handleWidthSize: FocusEventHandler<HTMLInputElement> = (event) => {
+    if (width > 5000) {
+      event.target.value = '5000';
+      onChangeWidthValue(event);
+    }
+
+    if (width < 100) {
+      event.target.value = '100';
+      onChangeWidthValue(event);
+    }
+  };
+
+  const handleHeightSize: FocusEventHandler<HTMLInputElement> = (event) => {
+    if (height > 5000) {
+      event.target.value = '5000';
+      onChangeHeightValue(event);
+    }
+
+    if (height < 100) {
+      event.target.value = '100';
+      onChangeHeightValue(event);
+    }
+  };
+
   useEffect(() => {
     const editorWidth = editorRef.current ? editorRef.current.offsetWidth : 0;
     const editorHeight = editorRef.current ? editorRef.current.offsetHeight : 0;
@@ -444,14 +467,22 @@ const ManagerMapCreate = (): JSX.Element => {
                   <Styled.LabelIcon>W</Styled.LabelIcon>
                   <Styled.LabelText>넓이</Styled.LabelText>
                 </Styled.Label>
-                <Styled.SizeInput value={widthValue} onChange={onChangeWidthValue} />
+                <Styled.SizeInput
+                  value={widthValue}
+                  onChange={onChangeWidthValue}
+                  onBlur={handleWidthSize}
+                />
               </Styled.InputWrapper>
               <Styled.InputWrapper>
                 <Styled.Label>
                   <Styled.LabelIcon>H</Styled.LabelIcon>
                   <Styled.LabelText>높이</Styled.LabelText>
                 </Styled.Label>
-                <Styled.SizeInput value={heightValue} onChange={onChangeHeightValue} />
+                <Styled.SizeInput
+                  value={heightValue}
+                  onChange={onChangeHeightValue}
+                  onBlur={handleHeightSize}
+                />
               </Styled.InputWrapper>
             </Styled.Toolbar>
           </Styled.EditorContent>

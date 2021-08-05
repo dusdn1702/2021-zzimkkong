@@ -44,6 +44,8 @@ const SCALE_DELTA = 0.001;
 const MIN_SCALE = 0.5;
 const MAX_SCALE = 3.0;
 
+const viewPointerModes = [Mode.Line, Mode.Polyline];
+
 const ManagerMapCreate = (): JSX.Element => {
   const editorRef = useRef<HTMLDivElement | null>(null);
 
@@ -435,12 +437,14 @@ const ManagerMapCreate = (): JSX.Element => {
                       height={`${height + 0.5}px`}
                       fill="url(#grid)"
                     />
-                    <circle
-                      cx={stickyCoordinate.x}
-                      cy={stickyCoordinate.y}
-                      r={3}
-                      fill={PALETTE.OPACITY_BLACK[300]}
-                    />
+                    {viewPointerModes.includes(mode) && (
+                      <circle
+                        cx={stickyCoordinate.x}
+                        cy={stickyCoordinate.y}
+                        r={3}
+                        fill={PALETTE.OPACITY_BLACK[300]}
+                      />
+                    )}
                     {mapElements.map((element) => (
                       <polyline
                         key={`polyline-${element.id}`}

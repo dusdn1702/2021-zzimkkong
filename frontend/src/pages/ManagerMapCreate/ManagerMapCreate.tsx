@@ -17,6 +17,7 @@ import { ReactComponent as MoveIcon } from 'assets/svg/move.svg';
 import { ReactComponent as PolylineIcon } from 'assets/svg/polyline.svg';
 import { ReactComponent as SelectIcon } from 'assets/svg/select.svg';
 import Button from 'components/Button/Button';
+import ColorPicker from 'components/ColorPicker/ColorPicker';
 import Header from 'components/Header/Header';
 import Layout from 'components/Layout/Layout';
 import PALETTE from 'constants/palette';
@@ -54,17 +55,20 @@ const ManagerMapCreate = (): JSX.Element => {
   const [mapName, onChangeMapName] = useInput('');
 
   const [mode, setMode] = useState(Mode.Select);
+
   const [isDragging, setDragging] = useState(false);
   const [dragOffsetX, setDragOffsetX] = useState(0);
   const [dragOffsetY, setDragOffsetY] = useState(0);
 
+  const [color, setColor] = useState<Color>('#333333');
+
   const [coordinate, setCoordinate] = useState<Coordinate>({ x: 0, y: 0 });
+
   const stickyCoordinate: Coordinate = {
     x: Math.round(coordinate.x / GRID_SIZE) * GRID_SIZE,
     y: Math.round(coordinate.y / GRID_SIZE) * GRID_SIZE,
   };
 
-  const [color, setColor] = useState<Color>('#333333');
   const [drawingStatus, setDrawingStatus] = useState<DrawingStatus>({});
   const [mapElements, setMapElements] = useState<MapElement[]>([]);
   const nextId = Math.max(...mapElements.map(({ id }) => id), 1) + 1;
@@ -363,13 +367,9 @@ const ManagerMapCreate = (): JSX.Element => {
               >
                 <ItemsIcon />
               </Styled.ToolbarButton>
-              {/* <Styled.ToolbarButton
-                text="색상선택"
-                selected={mode === Mode.SelectColor}
-                onClick={() => setMode(Mode.SelectColor)}
-              >
-                <ColorPicker> </ColorPicker>
-              </Styled.ToolbarButton> */}
+              <Styled.ToolbarButton text="색상선택">
+                <ColorPicker color={color} setColor={setColor} />
+              </Styled.ToolbarButton>
             </Styled.Toolbar>
             <Styled.Editor ref={editorRef}>
               <Styled.BoardContainer

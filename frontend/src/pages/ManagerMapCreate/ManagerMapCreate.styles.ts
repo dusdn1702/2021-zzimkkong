@@ -158,6 +158,7 @@ export const SizeInput = styled(Input)`
 export const Label = styled.div`
   color: ${({ theme }) => theme.gray[500]};
   text-align: center;
+  user-select: none;
 `;
 
 export const LabelIcon = styled.div``;

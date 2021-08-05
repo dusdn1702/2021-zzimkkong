@@ -285,9 +285,6 @@ const ManagerMapCreate = (): JSX.Element => {
                     value={mapName}
                     onChange={onChangeMapName}
                   />
-                  <IconButton>
-                    <EditIcon />
-                  </IconButton>
                 </Styled.MapNameContainer>
                 <Styled.TempSaveContainer>
                   <Styled.TempSaveMessage>1분 전에 임시 저장되었습니다.</Styled.TempSaveMessage>
@@ -341,6 +338,13 @@ const ManagerMapCreate = (): JSX.Element => {
               >
                 <ItemsIcon />
               </Styled.ToolbarButton>
+              {/* <Styled.ToolbarButton
+                text="색상선택"
+                selected={mode === Mode.SelectColor}
+                onClick={() => setMode(Mode.SelectColor)}
+              >
+                <ColorPicker> </ColorPicker>
+              </Styled.ToolbarButton> */}
             </Styled.Toolbar>
             <Styled.Editor ref={editorRef}>
               <Styled.BoardContainer

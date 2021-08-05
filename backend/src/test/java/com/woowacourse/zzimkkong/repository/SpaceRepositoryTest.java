@@ -1,20 +1,49 @@
 package com.woowacourse.zzimkkong.repository;
 
+import com.woowacourse.zzimkkong.domain.Reservation;
 import com.woowacourse.zzimkkong.domain.Space;
+import com.woowacourse.zzimkkong.exception.space.NoSuchSpaceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static com.woowacourse.zzimkkong.CommonFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpaceRepositoryTest extends RepositoryTest {
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @BeforeEach
     void setUp() {
         members.save(POBI);
         maps.save(LUTHER);
+        spaces.save(BE);
+        spaces.save(FE1);
+
+        Reservation BE_YESTERDAY = new Reservation.Builder()
+                .startTime(THE_DAY_AFTER_TOMORROW_START_TIME.minusDays(2))
+                .endTime(THE_DAY_AFTER_TOMORROW_START_TIME.minusDays(2).plusHours(1))
+                .description("옛날 회의")
+                .userName(USER_NAME)
+                .password(RESERVATION_PASSWORD)
+                .space(BE)
+                .build();
+        reservations.save(BE_YESTERDAY);
+//        reservations.save(BE_AM_ZERO_ONE);
+//        reservations.save(BE_PM_ONE_TWO);
+//        reservations.save(BE_NEXT_DAY_PM_SIX_TWELVE);
+//        reservations.save(FE1_ZERO_ONE);
+
+        entityManager.flush();
+        entityManager.clear();
     }
 
     @DisplayName("공간을 저장한다.")
@@ -42,5 +71,41 @@ class SpaceRepositoryTest extends RepositoryTest {
         // then
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(List.of(BE, FE1));
+    }
+
+    @Test
+    @Transactional
+    void findByIdTest() {
+        Space be = spaces.findByIdWithAfterTodayReservations(1L, LocalDateTime.now())
+                .orElse(Space.of(spaces.findById(1L).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
+//                .orElse(spaces.findByIdWithEmptyReservations(1L).orElseThrow(NoSuchSpaceException::new));
+
+        Space bePersisted = spaces.findById(1L).orElseThrow(NoSuchSpaceException::new);
+
+//        List<Space> allWithAfterTodayReservations = spaces.findAllWithReservationsAfterTime(LocalDateTime.now());
+        System.out.println("-----------------비교를 해보아요------------------");
+//        List<Reservation> allBySpaceIdAndEndTimeAfter = reservations.findAllBySpaceIdAndEndTimeAfter(1L, LocalDateTime.now());
+
+        System.out.println("-----------------요까지------------------");
+        System.out.println("be = " + be.getName());
+
+        List<Reservation> reservations = be.getReservations();
+        for (Reservation reservation: be.getReservations()) {
+            System.out.println("reservation = " + reservation);
+        }
+//        System.out.println("----------------------find all----------------------");
+//        List<Space> all = entityManager.createQuery("select distinct s from Space s join fetch s.reservations", Space.class)
+//                .getResultList();
+//
+//        System.out.println("----------------------루프 전----------------------");
+//
+//        for (Space space: all) {
+//            System.out.println("----------------------1단 for문----------------------");
+//            for (Reservation reservation: space.getReservations()) {
+//                System.out.println("----------------------2단 for문----------------------");
+//                System.out.println("이 예약은 " + reservation.getDescription() + "라는 설명을 가졌네요.");
+//            }
+//        }
+
     }
 }

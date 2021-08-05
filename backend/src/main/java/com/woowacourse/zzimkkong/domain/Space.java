@@ -6,6 +6,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @DynamicInsert
 @DynamicUpdate
@@ -41,6 +43,9 @@ public class Space {
     @JoinColumn(name = "map_id", foreignKey = @ForeignKey(name = "fk_space_map"), nullable = false)
     private Map map;
 
+    @OneToMany(mappedBy = "space", fetch = FetchType.LAZY)
+    private List<Reservation> reservations = new ArrayList<>(); // 예약은 2개인데, getReservations -> select문 하나
+
     protected Space() {
     }
 
@@ -63,6 +68,21 @@ public class Space {
         this.area = updateSpace.area;
         this.setting = updateSpace.setting;
         this.map = updateSpace.map;
+    }
+
+    public static Space of(final Space space, final List<Reservation> reservations) {
+        return new Builder()
+                .id(space.getId())
+                .name(space.getName())
+                .color(space.getColor())
+                .description(space.getDescription())
+                .area(space.getArea())
+                .setting(space.setting)
+                .textPosition(space.getTextPosition())
+                .coordinate(space.getCoordinate())
+                .map(space.getMap())
+                .reservations(reservations)
+                .build();
     }
 
     public boolean isCorrectTimeUnit(int minute) {
@@ -145,6 +165,10 @@ public class Space {
         return map;
     }
 
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
     public static class Builder {
 
         private Long id = null;
@@ -156,6 +180,7 @@ public class Space {
         private String description = null;
         private String area = null;
         private Setting setting = null;
+        private List<Reservation> reservations = null;
 
         public Builder() {
         }
@@ -202,6 +227,11 @@ public class Space {
 
         public Space.Builder map(Map inputMap) {
             map = inputMap;
+            return this;
+        }
+
+        public Space.Builder reservations(List<Reservation> inputReservations) {
+            reservations = inputReservations;
             return this;
         }
 

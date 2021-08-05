@@ -16,4 +16,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             final LocalDateTime secondEndTime);
 
     Boolean existsBySpaceIdAndEndTimeAfter(Long spaceId, LocalDateTime now);
+
+    List<Reservation> findAllBySpaceIdAndEndTimeAfter(Long spaceId, LocalDateTime now);
 }

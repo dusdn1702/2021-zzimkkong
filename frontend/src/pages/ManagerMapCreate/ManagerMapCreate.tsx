@@ -45,7 +45,7 @@ const SCALE_DELTA = 0.001;
 const MIN_SCALE = 0.5;
 const MAX_SCALE = 3.0;
 
-const viewPointerModes = [Mode.Line, Mode.Polyline];
+const viewStickyPointerModes = [Mode.Line, Mode.Polyline];
 
 const ManagerMapCreate = (): JSX.Element => {
   const editorRef = useRef<HTMLDivElement | null>(null);
@@ -63,6 +63,8 @@ const ManagerMapCreate = (): JSX.Element => {
   const [color, setColor] = useState<Color>(PALETTE.GRAY[400]);
 
   const [coordinate, setCoordinate] = useState<Coordinate>({ x: 0, y: 0 });
+
+  const [stickyPointerView, setStickyPointerView] = useState(false);
 
   const stickyCoordinate: Coordinate = {
     x: Math.round(coordinate.x / GRID_SIZE) * GRID_SIZE,
@@ -429,6 +431,8 @@ const ManagerMapCreate = (): JSX.Element => {
                   <g
                     id="board"
                     transform={`matrix(${board.scale}, 0, 0, ${board.scale}, ${board.x}, ${board.y})`}
+                    onMouseEnter={() => setStickyPointerView(true)}
+                    onMouseLeave={() => setStickyPointerView(false)}
                   >
                     <rect width={`${width}px`} height={`${height}px`} fill="white" />
                     {/* 전체 격자를 그리는 rect */}
@@ -437,7 +441,7 @@ const ManagerMapCreate = (): JSX.Element => {
                       height={`${height + 0.5}px`}
                       fill="url(#grid)"
                     />
-                    {viewPointerModes.includes(mode) && (
+                    {viewStickyPointerModes.includes(mode) && stickyPointerView && (
                       <circle
                         cx={stickyCoordinate.x}
                         cy={stickyCoordinate.y}

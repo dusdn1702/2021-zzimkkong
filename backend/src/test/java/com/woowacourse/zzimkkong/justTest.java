@@ -1,8 +1,8 @@
 package com.woowacourse.zzimkkong;
 
 import com.woowacourse.zzimkkong.domain.Space;
+import com.woowacourse.zzimkkong.repository.SpaceQueryRepository;
 import com.woowacourse.zzimkkong.repository.SpaceRepository;
-import com.woowacourse.zzimkkong.repository.SpaceRepositorySupport;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,15 +18,14 @@ public class justTest {
     private SpaceRepository spaceRepository;
 
     @Autowired
-    private SpaceRepositorySupport spaceRepositorySupport;
+    private SpaceQueryRepository spaceQueryRepository;
 
     @Test
     void findByIdTest() {
         spaceRepository.save(BE);
-        List<Space> spacesList = spaceRepositorySupport.findById(1L);
+        List<Space> spacesList = spaceQueryRepository.findById(1L);
 
         assertThat(spacesList.size()).isEqualTo(1);
-        assertThat(spacesList.get(0).getDescription()).isEqualTo(BE.getDescription());
-
+        assertThat(spacesList.get(0).getName()).isEqualTo(BE.getName());
     }
 }

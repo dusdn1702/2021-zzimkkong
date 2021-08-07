@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 import static com.woowacourse.zzimkkong.CommonFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,8 +59,10 @@ class SpaceRepositoryTest extends RepositoryTest {
     @Test
     void findAllByMapId() {
 
+        System.out.println("========================시작1========================");
         // when
-        List<Space> actual = spaces.findAllWithReservationsAfterTime(LUTHER.getId(), THE_DAY_AFTER_TOMORROW_START_TIME, THE_DAY_AFTER_TOMORROW_START_TIME.plusDays(1).withHour(0).withMinute(0).withSecond(0));
+        Optional<Space> actual = spaces.findByIdWithAfterTodayReservations(BE.getId(), THE_DAY_AFTER_TOMORROW_START_TIME, THE_DAY_AFTER_TOMORROW_START_TIME.plusDays(1).withHour(0).withMinute(0).withSecond(0));
+        System.out.println("========================끝1========================");
 
         // then
         assertThat(actual).usingRecursiveComparison()

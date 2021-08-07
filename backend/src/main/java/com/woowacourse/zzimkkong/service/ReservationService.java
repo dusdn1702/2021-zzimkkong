@@ -64,7 +64,8 @@ public abstract class ReservationService {
 
         validateSpaceSetting(space, startDateTime, endDateTime);
 
-        List<Reservation> reservationsOnDate = getReservations(
+        List<Reservation> reservationsOnDate =
+                getReservations(
                 Collections.singletonList(space),
                 startDateTime.toLocalDate());
 
@@ -123,18 +124,23 @@ public abstract class ReservationService {
 
     protected List<Reservation> getReservations(final Collection<Space> findSpaces, final LocalDate date) {
         LocalDateTime minimumDateTime = date.atStartOfDay();
-        LocalDateTime maximumDateTime = minimumDateTime.plusDays(ONE_DAY);
-        List<Long> spaceIds = findSpaces.stream()
-                .map(Space::getId)
+//        LocalDateTime maximumDateTime = minimumDateTime.plusDays(ONE_DAY);
+//        List<Long> spaceIds = findSpaces.stream()
+//                .map(Space::getId)
+//                .collect(Collectors.toList());
+        List<Reservation> reservations = findSpaces.stream()
+                .flatMap(space -> space.getReservations().stream())
+                .filter(reservation1 -> reservation1.getEndTime().toLocalDate().equals(timeConverter.getNow().toLocalDate()))
                 .collect(Collectors.toList());
 
-        return reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
-                spaceIds,
-                minimumDateTime,
-                maximumDateTime,
-                minimumDateTime,
-                maximumDateTime
-        );
+        return reservations;
+//        return reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
+//                spaceIds,
+//                minimumDateTime,
+//                maximumDateTime,
+//                minimumDateTime,
+//                maximumDateTime
+//        );
     }
 
     // todo 이 메소드 없애기 -김샐

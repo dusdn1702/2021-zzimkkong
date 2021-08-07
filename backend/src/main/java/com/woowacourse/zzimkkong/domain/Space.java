@@ -4,10 +4,12 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @DynamicInsert
 @DynamicUpdate
@@ -43,8 +45,8 @@ public class Space {
     @JoinColumn(name = "map_id", foreignKey = @ForeignKey(name = "fk_space_map"), nullable = false)
     private Map map;
 
-    @OneToMany(mappedBy = "space", fetch = FetchType.LAZY)
-    private List<Reservation> reservations = new ArrayList<>(); // 예약은 2개인데, getReservations -> select문 하나
+    @OneToMany(mappedBy = "space", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Reservation> reservations = new ArrayList<>();
 
     protected Space() {
     }
@@ -71,7 +73,7 @@ public class Space {
     }
 
     public static Space of(final Space space, final List<Reservation> reservations) {
-        return new Builder()
+        return new Space.Builder()
                 .id(space.getId())
                 .name(space.getName())
                 .color(space.getColor())
@@ -169,8 +171,17 @@ public class Space {
         return reservations;
     }
 
-    public static class Builder {
+    public void addReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 
+    public List<Reservation> getReservationsByDate(LocalDate date) {
+        return this.reservations.stream()
+                .filter(reservation -> reservation.getStartTime().toLocalDate().equals(date))
+                .collect(Collectors.toList());
+    }
+
+    public static class Builder {
         private Long id = null;
         private String name = null;
         private String textPosition = null;

@@ -5,6 +5,7 @@ import com.woowacourse.zzimkkong.domain.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 public class ServiceTestFixture {
     public static final String EMAIL = "pobi@email.com";

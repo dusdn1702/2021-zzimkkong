@@ -20,7 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -106,10 +110,15 @@ public class MapService {
     }
 
     private void validateExistReservations(Long mapId) {
-        List<Space> findSpaces = spaces.findAllByMapId(mapId);
+        List<Space> findSpaces = spaces.findAllWithReservationsAfterTime(mapId, LocalDateTime.now());
+        if(findSpaces.isEmpty()) {
+            findSpaces = spaces.findAll().stream()
+                    .map(space -> Space.of(space, Collections.emptyList()))
+                    .collect(Collectors.toList());
+        }
 
         boolean isExistReservationInAnySpace = findSpaces.stream()
-                .anyMatch(space -> reservations.existsBySpaceIdAndEndTimeAfter(space.getId(), timeConverter.getNow()));
+                .anyMatch(space -> !space.getReservations().isEmpty());
 
         if (isExistReservationInAnySpace) {
             throw new ReservationExistOnSpaceException();

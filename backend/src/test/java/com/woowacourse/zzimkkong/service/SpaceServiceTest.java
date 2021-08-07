@@ -7,6 +7,7 @@ import com.woowacourse.zzimkkong.exception.authorization.NoAuthorityOnMapExcepti
 import com.woowacourse.zzimkkong.exception.map.NoSuchMapException;
 import com.woowacourse.zzimkkong.exception.space.NoSuchSpaceException;
 import com.woowacourse.zzimkkong.exception.space.ReservationExistOnSpaceException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +65,13 @@ class SpaceServiceTest extends ServiceTest {
             SPACE_DRAWING,
             updateSettingsRequest
     );
+
+    @BeforeEach
+    void setUp() {
+        BE.addReservations(List.of(BE_AM_ZERO_ONE, BE_PM_ONE_TWO, BE_NEXT_DAY_PM_SIX_TWELVE));
+        FE1.addReservations(List.of(FE1_ZERO_ONE));
+    }
+
 
     @DisplayName("공간 생성 요청 시, 공간을 생성한다.")
     @Test
@@ -116,7 +125,7 @@ class SpaceServiceTest extends ServiceTest {
         // given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findById(anyLong()))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
 
         // when
@@ -133,7 +142,7 @@ class SpaceServiceTest extends ServiceTest {
         // given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findById(anyLong()))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
                 .willReturn(Optional.empty());
 
         // when, then
@@ -147,7 +156,7 @@ class SpaceServiceTest extends ServiceTest {
         // given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findById(anyLong()))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
 
         // when, then
@@ -161,7 +170,7 @@ class SpaceServiceTest extends ServiceTest {
         // given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findAllByMapId(anyLong()))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
                 .willReturn(List.of(BE, FE1));
 
         // when
@@ -190,7 +199,7 @@ class SpaceServiceTest extends ServiceTest {
         // given, when
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findById(anyLong()))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
                 .willReturn(Optional.of(FE1));
         given(storageUploader.upload(anyString(), any(File.class)))
                 .willReturn(MAP_IMAGE_URL);
@@ -212,7 +221,7 @@ class SpaceServiceTest extends ServiceTest {
         // given, when
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findById(anyLong()))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
 
         // then
@@ -228,12 +237,14 @@ class SpaceServiceTest extends ServiceTest {
     @Test
     void deleteReservation() {
         //given
+        BE.addReservations(new ArrayList<>());
+
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findById(anyLong()))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
-        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
-                .willReturn(false);
+//        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
+//                .willReturn(false);
 
         //then
         assertDoesNotThrow(() -> spaceService.deleteSpace(LUTHER.getId(), BE.getId(), POBI));
@@ -257,7 +268,7 @@ class SpaceServiceTest extends ServiceTest {
         //given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findById(anyLong()))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
                 .willReturn(Optional.empty());
 
         //then
@@ -271,10 +282,10 @@ class SpaceServiceTest extends ServiceTest {
         //given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findById(anyLong()))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
-        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
-                .willReturn(true);
+//        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
+//                .willReturn(true);
 
         assertThatThrownBy(() -> spaceService.deleteSpace(LUTHER.getId(), BE.getId(), POBI))
                 .isInstanceOf(ReservationExistOnSpaceException.class);

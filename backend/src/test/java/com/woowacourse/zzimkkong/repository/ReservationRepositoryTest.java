@@ -2,6 +2,7 @@ package com.woowacourse.zzimkkong.repository;
 
 import com.woowacourse.zzimkkong.domain.Reservation;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,6 +27,8 @@ class ReservationRepositoryTest extends RepositoryTest {
         reservations.save(BE_PM_ONE_TWO);
         reservations.save(BE_NEXT_DAY_PM_SIX_TWELVE);
         reservations.save(FE1_ZERO_ONE);
+
+
     }
 
     @Test
@@ -49,59 +52,59 @@ class ReservationRepositoryTest extends RepositoryTest {
         assertThat(savedReservation).isEqualTo(be_two_three);
     }
 
-    @DisplayName("map id, space id, 특정 시간이 주어질 때, 해당 spaceId와 해당 시간에 속하는 예약들만 찾아온다")
-    @Test
-    void findAllBySpaceIdAndStartTimeIsBetweenAndEndTimeIsBetween() {
-        // given, when
-        List<Reservation> foundReservations = getReservations(
-                List.of(BE.getId(), FE1.getId()),
-                THE_DAY_AFTER_TOMORROW_START_TIME,
-                THE_DAY_AFTER_TOMORROW_START_TIME.plusHours(14));
+//    @DisplayName("map id, space id, 특정 시간이 주어질 때, 해당 spaceId와 해당 시간에 속하는 예약들만 찾아온다")
+//    @Test
+//    void findAllBySpaceIdAndStartTimeIsBetweenAndEndTimeIsBetween() {
+//        // given, when
+//        List<Reservation> foundReservations = getReservations(
+//                List.of(BE.getId(), FE1.getId()),
+//                THE_DAY_AFTER_TOMORROW_START_TIME,
+//                THE_DAY_AFTER_TOMORROW_START_TIME.plusHours(14));
+//
+//        // then
+//        assertThat(foundReservations).usingRecursiveComparison()
+//                .isEqualTo(List.of(BE_AM_ZERO_ONE, BE_PM_ONE_TWO, FE1_ZERO_ONE));
+//    }
 
-        // then
-        assertThat(foundReservations).usingRecursiveComparison()
-                .isEqualTo(List.of(BE_AM_ZERO_ONE, BE_PM_ONE_TWO, FE1_ZERO_ONE));
-    }
+//    @DisplayName("특정 시간에 부합하는 예약이 없으면 빈 리스트를 반환한다")
+//    @Test
+//    void findAllBySpaceIdAndStartTimeIsBetweenAndEndTimeIsBetween_noMatchingTime() {
+//        // given, when
+//        List<Reservation> foundReservations = getReservations(
+//                List.of(BE.getId()),
+//                THE_DAY_AFTER_TOMORROW_START_TIME.plusHours(15),
+//                THE_DAY_AFTER_TOMORROW_START_TIME.plusHours(18));
+//
+//        // then
+//        assertThat(foundReservations).isEmpty();
+//    }
 
-    @DisplayName("특정 시간에 부합하는 예약이 없으면 빈 리스트를 반환한다")
-    @Test
-    void findAllBySpaceIdAndStartTimeIsBetweenAndEndTimeIsBetween_noMatchingTime() {
-        // given, when
-        List<Reservation> foundReservations = getReservations(
-                List.of(BE.getId()),
-                THE_DAY_AFTER_TOMORROW_START_TIME.plusHours(15),
-                THE_DAY_AFTER_TOMORROW_START_TIME.plusHours(18));
+//    @DisplayName("특정 공간에 부합하는 예약이 없으면 빈 리스트를 반환한다")
+//    @Test
+//    void findAllBySpaceIdAndStartTimeIsBetweenAndEndTimeIsBetween_noMatchingReservation() {
+//        // given, when
+//        List<Reservation> foundReservations = getReservations(
+//                List.of(FE1.getId()),
+//                THE_DAY_AFTER_TOMORROW_START_TIME.plusHours(13),
+//                THE_DAY_AFTER_TOMORROW_START_TIME.plusHours(14));
+//
+//        // then
+//        assertThat(foundReservations).isEmpty();
+//    }
 
-        // then
-        assertThat(foundReservations).isEmpty();
-    }
-
-    @DisplayName("특정 공간에 부합하는 예약이 없으면 빈 리스트를 반환한다")
-    @Test
-    void findAllBySpaceIdAndStartTimeIsBetweenAndEndTimeIsBetween_noMatchingReservation() {
-        // given, when
-        List<Reservation> foundReservations = getReservations(
-                List.of(FE1.getId()),
-                THE_DAY_AFTER_TOMORROW_START_TIME.plusHours(13),
-                THE_DAY_AFTER_TOMORROW_START_TIME.plusHours(14));
-
-        // then
-        assertThat(foundReservations).isEmpty();
-    }
-
-    @DisplayName("map id와 특정 날짜가 주어질 때, 해당 날짜에 속하는 해당 map의 모든 space들의 예약들을 찾아온다")
-    @Test
-    void findAllBySpaceIdAndStartTimeIsBetweenAndEndTimeIsBetween_allSpaces() {
-        // given, when
-        List<Reservation> foundReservations = getReservations(
-                List.of(BE.getId(), FE1.getId()),
-                THE_DAY_AFTER_TOMORROW_START_TIME,
-                THE_DAY_AFTER_TOMORROW_START_TIME.plusDays(1));
-
-        // then
-        assertThat(foundReservations).usingRecursiveComparison()
-                .isEqualTo(List.of(BE_AM_ZERO_ONE, BE_PM_ONE_TWO, FE1_ZERO_ONE));
-    }
+//    @DisplayName("map id와 특정 날짜가 주어질 때, 해당 날짜에 속하는 해당 map의 모든 space들의 예약들을 찾아온다")
+//    @Test
+//    void findAllBySpaceIdAndStartTimeIsBetweenAndEndTimeIsBetween_allSpaces() {
+//        // given, when
+//        List<Reservation> foundReservations = getReservations(
+//                List.of(BE.getId(), FE1.getId()),
+//                THE_DAY_AFTER_TOMORROW_START_TIME,
+//                THE_DAY_AFTER_TOMORROW_START_TIME.plusDays(1));
+//
+//        // then
+//        assertThat(foundReservations).usingRecursiveComparison()
+//                .isEqualTo(List.of(BE_AM_ZERO_ONE, BE_PM_ONE_TWO, FE1_ZERO_ONE));
+//    }
 
     @DisplayName("예약을 삭제할 수 있다.")
     @Test
@@ -110,34 +113,34 @@ class ReservationRepositoryTest extends RepositoryTest {
         assertDoesNotThrow(() -> reservations.delete(BE_NEXT_DAY_PM_SIX_TWELVE));
     }
 
-    @DisplayName("해당 공간에 대한 예약 존재여부를 확인한다.")
-    @Test
-    void existsBySpace() {
-        // given, when, then
-        assertThat(reservations.existsBySpaceIdAndEndTimeAfter(FE1.getId(), LocalDateTime.now())).isTrue();
+//    @DisplayName("해당 공간에 대한 예약 존재여부를 확인한다.")
+//    @Test
+//    void existsBySpace() {
+//        // given, when, then
+//        assertThat(reservations.existsBySpaceIdAndEndTimeAfter(FE1.getId(), LocalDateTime.now())).isTrue();
+//
+//        reservations.delete(FE1_ZERO_ONE);
+//        assertThat(reservations.existsBySpaceIdAndEndTimeAfter(FE1.getId(), LocalDateTime.now())).isFalse();
+//    }
 
-        reservations.delete(FE1_ZERO_ONE);
-        assertThat(reservations.existsBySpaceIdAndEndTimeAfter(FE1.getId(), LocalDateTime.now())).isFalse();
-    }
+//    private List<Reservation> getReservations(List<Long> spaceIds, LocalDateTime minimumDateTime, LocalDateTime maximumDateTime) {
+//        return reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
+//                spaceIds,
+//                minimumDateTime,
+//                maximumDateTime,
+//                minimumDateTime,
+//                maximumDateTime
+//        );
+//    }
 
-    private List<Reservation> getReservations(List<Long> spaceIds, LocalDateTime minimumDateTime, LocalDateTime maximumDateTime) {
-        return reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
-                spaceIds,
-                minimumDateTime,
-                maximumDateTime,
-                minimumDateTime,
-                maximumDateTime
-        );
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {"0:false", "30:true"}, delimiter = ':')
-    @DisplayName("특정 시간 이후의 예약이 존재하는지 확인한다.")
-    void existsAllStartTimeAfter(int minusMinute, boolean expected) {
-        //given, when
-        Boolean actual = reservations.existsBySpaceIdAndEndTimeAfter(BE.getId(), BE_NEXT_DAY_PM_SIX_TWELVE.getEndTime().minusMinutes(minusMinute));
-
-        //then
-        assertThat(actual).isEqualTo(expected);
-    }
+//    @ParameterizedTest
+//    @CsvSource(value = {"0:false", "30:true"}, delimiter = ':')
+//    @DisplayName("특정 시간 이후의 예약이 존재하는지 확인한다.")
+//    void existsAllStartTimeAfter(int minusMinute, boolean expected) {
+//        //given, when
+//        Boolean actual = reservations.existsBySpaceIdAndEndTimeAfter(BE.getId(), BE_NEXT_DAY_PM_SIX_TWELVE.getEndTime().minusMinutes(minusMinute));
+//
+//        //then
+//        assertThat(actual).isEqualTo(expected);
+//    }
 }

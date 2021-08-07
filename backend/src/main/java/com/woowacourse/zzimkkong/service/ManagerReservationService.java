@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -39,8 +41,8 @@ public class ManagerReservationService extends ReservationService {
             final Member manager) {
         validateAuthorityOnMap(mapId, manager);
 
-        Space space = spaces.findById(spaceId)
-                .orElseThrow(NoSuchSpaceException::new);
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
         validateTime(reservationCreateUpdateWithPasswordRequest);
         validateAvailability(space, reservationCreateUpdateWithPasswordRequest);
 
@@ -64,8 +66,16 @@ public class ManagerReservationService extends ReservationService {
             final Member manager) {
         validateAuthorityOnMap(mapId, manager);
 
-        List<Space> findSpaces = spaces.findAllByMapId(mapId);
-        List<Reservation> reservations = getReservations(findSpaces, date);
+        List<Space> findSpaces = spaces.findAllWithReservationsAfterTime(mapId, LocalDateTime.now());
+        if(findSpaces.isEmpty()) {
+            findSpaces = spaces.findAll().stream()
+                    .map(space -> Space.of(space, Collections.emptyList()))
+                    .collect(Collectors.toList());
+        }
+
+        List<Reservation> reservations = findSpaces.stream()
+                .flatMap(space -> space.getReservationsByDate(date).stream())
+                .collect(Collectors.toList());
 
         return ReservationFindAllResponse.of(findSpaces, reservations);
     }
@@ -78,9 +88,10 @@ public class ManagerReservationService extends ReservationService {
             final Member manager) {
         validateAuthorityOnMap(mapId, manager);
 
-        Space space = spaces.findById(spaceId)
-                .orElseThrow(NoSuchSpaceException::new);
-        List<Reservation> reservations = getReservations(Collections.singletonList(space), date);
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
+//        List<Reservation> reservations = getReservations(Collections.singletonList(space), date);
+        List<Reservation> reservations = space.getReservationsByDate(date);
 
         return ReservationFindResponse.from(reservations);
     }
@@ -107,8 +118,8 @@ public class ManagerReservationService extends ReservationService {
             final ReservationCreateUpdateRequest reservationCreateUpdateRequest,
             final Member manager) {
         validateAuthorityOnMap(mapId, manager);
-        Space space = spaces.findById(spaceId)
-                .orElseThrow(NoSuchSpaceException::new);
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
 
         validateTime(reservationCreateUpdateRequest);
         Reservation reservation = reservations

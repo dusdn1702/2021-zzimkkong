@@ -2,18 +2,21 @@ package com.woowacourse.zzimkkong.service;
 
 import com.woowacourse.zzimkkong.domain.Map;
 import com.woowacourse.zzimkkong.domain.Member;
+import com.woowacourse.zzimkkong.domain.Space;
 import com.woowacourse.zzimkkong.dto.map.MapCreateResponse;
 import com.woowacourse.zzimkkong.dto.map.MapCreateUpdateRequest;
 import com.woowacourse.zzimkkong.dto.map.MapFindAllResponse;
 import com.woowacourse.zzimkkong.dto.map.MapFindResponse;
 import com.woowacourse.zzimkkong.exception.authorization.NoAuthorityOnMapException;
 import com.woowacourse.zzimkkong.exception.space.ReservationExistOnSpaceException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +30,12 @@ import static org.mockito.BDDMockito.given;
 class MapServiceTest extends ServiceTest {
     @Autowired
     private MapService mapService;
+
+    @BeforeEach
+    void setUp() {
+        BE.addReservations(List.of(BE_AM_ZERO_ONE, BE_PM_ONE_TWO, BE_NEXT_DAY_PM_SIX_TWELVE));
+        FE1.addReservations(List.of(FE1_ZERO_ONE));
+    }
 
     @Test
     @DisplayName("맵 생성 요청 시, 올바른 요청이 들어오면 맵을 생성한다.")
@@ -109,14 +118,17 @@ class MapServiceTest extends ServiceTest {
     @DisplayName("맵 삭제 요청 시, 이후에 존재하는 예약이 없다면 삭제한다.")
     void delete() {
         //given
+        BE.addReservations(Collections.emptyList());
+        FE1.addReservations(Collections.emptyList());
+
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
 
-        given(spaces.findAllByMapId(anyLong()))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
                 .willReturn(List.of(BE, FE1));
 
-        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
-                .willReturn(false);
+//        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
+//                .willReturn(false);
 
         //when, then
         assertDoesNotThrow(() -> mapService.deleteMap(LUTHER.getId(), POBI));
@@ -125,15 +137,16 @@ class MapServiceTest extends ServiceTest {
     @Test
     @DisplayName("맵 삭제 요청 시, 이후에 존재하는 예약이 있다면 예외가 발생한다.")
     void deleteExistReservationException() {
+
         //given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
 
-        given(spaces.findAllByMapId(anyLong()))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
                 .willReturn(List.of(BE, FE1));
 
-        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
-                .willReturn(true);
+//        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
+//                .willReturn(true);
 
         //when, then
         assertThatThrownBy(() -> mapService.deleteMap(LUTHER.getId(), POBI))

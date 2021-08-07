@@ -16,25 +16,22 @@ import com.woowacourse.zzimkkong.repository.SpaceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class SpaceService {
     private final MapRepository maps;
     private final SpaceRepository spaces;
-    private final ReservationRepository reservations;
-    private final TimeConverter timeConverter;
 
     public SpaceService(
             final MapRepository maps,
-            final SpaceRepository spaces,
-            final ReservationRepository reservations,
-            final TimeConverter timeConverter) {
+            final SpaceRepository spaces) {
         this.maps = maps;
         this.spaces = spaces;
-        this.reservations = reservations;
-        this.timeConverter = timeConverter;
     }
 
     public SpaceCreateResponse saveSpace(
@@ -80,8 +77,8 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        Space space = spaces.findById(spaceId)
-                .orElseThrow(NoSuchSpaceException::new);
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
         return SpaceFindDetailResponse.from(space);
     }
 
@@ -93,7 +90,13 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        List<Space> findAllSpaces = spaces.findAllByMapId(mapId);
+        List<Space> findAllSpaces = spaces.findAllWithReservationsAfterTime(mapId, LocalDateTime.now());
+        if(findAllSpaces.isEmpty()) {
+            findAllSpaces = spaces.findAll().stream()
+                    .map(space -> Space.of(space, Collections.emptyList()))
+                    .collect(Collectors.toList());
+        }
+
         return SpaceFindAllResponse.from(findAllSpaces);
     }
 
@@ -106,8 +109,8 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        Space space = spaces.findById(spaceId)
-                .orElseThrow(NoSuchSpaceException::new);
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
         Space updateSpace = getUpdateSpace(spaceCreateUpdateRequest, map);
 
         space.update(updateSpace);
@@ -121,10 +124,11 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        Space space = spaces.findById(spaceId)
-                .orElseThrow(NoSuchSpaceException::new);
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
 
-        validateReservationExistence(spaceId);
+        validateReservationExistence(space);
+//        validateReservationExistence(spaceId);
 
         spaces.delete(space);
     }
@@ -154,8 +158,9 @@ public class SpaceService {
                 .build();
     }
 
-    private void validateReservationExistence(final Long spaceId) {
-        if (reservations.existsBySpaceIdAndEndTimeAfter(spaceId, timeConverter.getNow())) {
+    private void validateReservationExistence(final Space space){
+        if(!space.getReservations().isEmpty()) {
+        //        if (reservations.existsBySpaceIdAndEndTimeAfter(spaceId, timeConverter.getNow())) {
             throw new ReservationExistOnSpaceException();
         }
     }

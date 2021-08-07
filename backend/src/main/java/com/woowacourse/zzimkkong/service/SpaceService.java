@@ -77,7 +77,7 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now(), LocalDateTime.MAX)
                 .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
         return SpaceFindDetailResponse.from(space);
     }
@@ -90,7 +90,7 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        List<Space> findAllSpaces = spaces.findAllWithReservationsAfterTime(mapId, LocalDateTime.now());
+        List<Space> findAllSpaces = spaces.findAllWithReservationsAfterTime(mapId, LocalDateTime.now(), LocalDateTime.MAX);
         if(findAllSpaces.isEmpty()) {
             findAllSpaces = spaces.findAll().stream()
                     .map(space -> Space.of(space, Collections.emptyList()))
@@ -109,7 +109,7 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now(), LocalDateTime.MAX)
                 .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
         Space updateSpace = getUpdateSpace(spaceCreateUpdateRequest, map);
 
@@ -124,7 +124,7 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now(), LocalDateTime.MAX)
                 .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
 
         validateReservationExistence(space);

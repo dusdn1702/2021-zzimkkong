@@ -41,7 +41,7 @@ public class ManagerReservationService extends ReservationService {
             final Member manager) {
         validateAuthorityOnMap(mapId, manager);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now(), LocalDateTime.now().plusDays(1).withHour(0).withMinute(0).withSecond(0))
                 .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
         validateTime(reservationCreateUpdateWithPasswordRequest);
         validateAvailability(space, reservationCreateUpdateWithPasswordRequest);
@@ -66,7 +66,7 @@ public class ManagerReservationService extends ReservationService {
             final Member manager) {
         validateAuthorityOnMap(mapId, manager);
 
-        List<Space> findSpaces = spaces.findAllWithReservationsAfterTime(mapId, LocalDateTime.now());
+        List<Space> findSpaces = spaces.findAllWithReservationsAfterTime(mapId, date.atStartOfDay(), date.atStartOfDay().plusDays(1));
         if(findSpaces.isEmpty()) {
             findSpaces = spaces.findAll().stream()
                     .map(space -> Space.of(space, Collections.emptyList()))
@@ -88,7 +88,7 @@ public class ManagerReservationService extends ReservationService {
             final Member manager) {
         validateAuthorityOnMap(mapId, manager);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, date.atStartOfDay(), date.atStartOfDay().plusDays(1))
                 .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
 //        List<Reservation> reservations = getReservations(Collections.singletonList(space), date);
         List<Reservation> reservations = space.getReservationsByDate(date);
@@ -118,7 +118,7 @@ public class ManagerReservationService extends ReservationService {
             final ReservationCreateUpdateRequest reservationCreateUpdateRequest,
             final Member manager) {
         validateAuthorityOnMap(mapId, manager);
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now())
+        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, reservationCreateUpdateRequest.getStartDateTime(), reservationCreateUpdateRequest.getEndDateTime())
                 .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
 
         validateTime(reservationCreateUpdateRequest);

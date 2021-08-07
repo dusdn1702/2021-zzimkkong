@@ -124,7 +124,7 @@ class MapServiceTest extends ServiceTest {
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
 
-        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(List.of(BE, FE1));
 
 //        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
@@ -142,7 +142,7 @@ class MapServiceTest extends ServiceTest {
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
 
-        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(List.of(BE, FE1));
 
 //        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))

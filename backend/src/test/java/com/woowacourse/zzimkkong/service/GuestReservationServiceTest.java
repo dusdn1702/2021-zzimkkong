@@ -54,7 +54,7 @@ class GuestReservationServiceTest extends ServiceTest {
         //given
         given(maps.existsById(anyLong()))
                 .willReturn(true);
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.save(any(Reservation.class)))
                 .willReturn(reservation);
@@ -75,7 +75,7 @@ class GuestReservationServiceTest extends ServiceTest {
         //given, when
         given(maps.existsById(anyLong()))
                 .willReturn(false);
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.save(any(Reservation.class)))
                 .willReturn(reservation);
@@ -94,7 +94,7 @@ class GuestReservationServiceTest extends ServiceTest {
         //given, when
         given(maps.existsById(anyLong()))
                 .willReturn(true);
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.empty());
         given(reservations.save(any(Reservation.class)))
                 .willReturn(reservation);
@@ -273,7 +273,7 @@ class GuestReservationServiceTest extends ServiceTest {
         //when
         given(maps.existsById(anyLong()))
                 .willReturn(true);
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
 //        given(reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
 //                anyList(),
@@ -300,7 +300,7 @@ class GuestReservationServiceTest extends ServiceTest {
         //given, when
         given(maps.existsById(anyLong()))
                 .willReturn(true);
-        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(List.of(BE, FE1));
         //then
         assertThatThrownBy(() -> guestReservationService.findReservations(
@@ -316,9 +316,9 @@ class GuestReservationServiceTest extends ServiceTest {
         //given, when
         given(maps.existsById(anyLong()))
                 .willReturn(true);
-        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(List.of(BE, FE1));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
 //        given(reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
 //                anyList(),
@@ -370,7 +370,7 @@ class GuestReservationServiceTest extends ServiceTest {
         //when
         given(maps.existsById(anyLong()))
                 .willReturn(true);
-        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(findSpaces);
 //        given(reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
 //                anyList(),
@@ -456,7 +456,7 @@ class GuestReservationServiceTest extends ServiceTest {
         //given
         given(maps.existsById(anyLong()))
                 .willReturn(true);
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.findById(anyLong()))
                 .willReturn(Optional.of(reservation));
@@ -533,7 +533,7 @@ class GuestReservationServiceTest extends ServiceTest {
         //given
         given(maps.existsById(anyLong()))
                 .willReturn(true);
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.findById(anyLong()))
                 .willReturn(Optional.of(reservation));
@@ -562,7 +562,7 @@ class GuestReservationServiceTest extends ServiceTest {
         //given
         given(maps.existsById(anyLong()))
                 .willReturn(true);
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.findById(anyLong()))
                 .willReturn(Optional.of(reservation));
@@ -674,7 +674,7 @@ class GuestReservationServiceTest extends ServiceTest {
     private void saveMock() {
         given(maps.existsById(anyLong()))
                 .willReturn(true);
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.save(any(Reservation.class)))
                 .willReturn(reservation);

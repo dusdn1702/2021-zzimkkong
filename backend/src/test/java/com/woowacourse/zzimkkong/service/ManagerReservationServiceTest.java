@@ -54,7 +54,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
                 .willReturn(true);
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.save(any(Reservation.class)))
                 .willReturn(reservation);
@@ -112,7 +112,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
                 .willReturn(true);
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.empty());
 
         //then
@@ -392,7 +392,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
         //when
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
 //        given(reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
 //                anyList(),
@@ -427,7 +427,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
         //given, when
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.empty());
         //then
         assertThatThrownBy(() -> managerReservationService.findReservations(LUTHER.getId(), BE.getId(), THE_DAY_AFTER_TOMORROW, POBI))
@@ -440,9 +440,9 @@ public class ManagerReservationServiceTest extends ServiceTest {
         //given, when
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
-        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(List.of(BE, FE1));
 //        given(reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
 //                anyList(),
@@ -488,7 +488,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
         //when
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(findSpaces);
 //        given(reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
 //                anyList(),
@@ -511,7 +511,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
         //given, when
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(List.of(BE, FE1));
 //        given(reservations.findAllBySpaceIdInAndStartTimeIsBetweenAndEndTimeIsBetween(
 //                anyList(),
@@ -613,7 +613,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
         //given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.findById(anyLong()))
                 .willReturn(Optional.of(reservation));
@@ -669,7 +669,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
         //given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
 
         //when
@@ -696,7 +696,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
         //given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
 
         //when
@@ -726,7 +726,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
                 .willReturn(true);
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.findById(anyLong()))
                 .willReturn(Optional.of(reservation));
@@ -763,7 +763,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
                 .willReturn(true);
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.findById(anyLong()))
                 .willReturn(Optional.of(reservation));
@@ -863,7 +863,7 @@ public class ManagerReservationServiceTest extends ServiceTest {
     private void saveMock() {
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class)))
+        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(Optional.of(BE));
         given(reservations.save(any(Reservation.class)))
                 .willReturn(reservation);

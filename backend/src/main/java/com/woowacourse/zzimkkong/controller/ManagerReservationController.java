@@ -4,6 +4,7 @@ import com.woowacourse.zzimkkong.domain.Manager;
 import com.woowacourse.zzimkkong.domain.Member;
 import com.woowacourse.zzimkkong.dto.reservation.*;
 import com.woowacourse.zzimkkong.dto.slack.SlackResponse;
+import com.woowacourse.zzimkkong.dto.space.SpaceFindAllResponse;
 import com.woowacourse.zzimkkong.service.ManagerReservationService;
 import com.woowacourse.zzimkkong.service.SlackService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -48,10 +49,14 @@ public class ManagerReservationController {
             @PathVariable final Long mapId,
             @RequestParam @DateTimeFormat(pattern = DATE_FORMAT) final LocalDate date,
             @Manager final Member manager) {
+        long start = System.currentTimeMillis();
         ReservationFindAllResponse reservationFindAllResponse = reservationService.findAllReservations(
                 mapId,
                 date,
                 manager);
+        long end = System.currentTimeMillis() - start;
+        System.out.println("모든 예약 조회: " + end);
+
         return ResponseEntity.ok().body(reservationFindAllResponse);
     }
 
@@ -61,11 +66,15 @@ public class ManagerReservationController {
             @PathVariable final Long spaceId,
             @RequestParam @DateTimeFormat(pattern = DATE_FORMAT) final LocalDate date,
             @Manager final Member manager) {
+        long start = System.currentTimeMillis();
         ReservationFindResponse reservationFindResponse = reservationService.findReservations(
                 mapId,
                 spaceId,
                 date,
                 manager);
+        long end = System.currentTimeMillis() - start;
+        System.out.println("특정 공간 예약 조회: " + end);
+
         return ResponseEntity.ok().body(reservationFindResponse);
     }
 

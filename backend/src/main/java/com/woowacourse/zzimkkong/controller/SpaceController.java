@@ -35,7 +35,10 @@ public class SpaceController {
 
     @GetMapping
     public ResponseEntity<SpaceFindAllResponse> findAll(@PathVariable final Long mapId, @Manager final Member manager) {
+        long start = System.currentTimeMillis();
         SpaceFindAllResponse spaceFindAllResponse = spaceService.findAllSpace(mapId, manager);
+        long end = System.currentTimeMillis() - start;
+        System.out.println("모든 공간 조회: " + end);
         return ResponseEntity.ok().body(spaceFindAllResponse);
     }
 
@@ -44,7 +47,10 @@ public class SpaceController {
             @PathVariable final Long mapId,
             @PathVariable final Long spaceId,
             @Manager final Member manager) {
+        long start = System.currentTimeMillis();
         SpaceFindDetailResponse spaceFindDetailResponse = spaceService.findSpace(mapId, spaceId, manager);
+        long end = System.currentTimeMillis() - start;
+        System.out.println("공간 조회: " + end);
         return ResponseEntity.ok().body(spaceFindDetailResponse);
     }
 

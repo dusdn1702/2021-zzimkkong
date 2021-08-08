@@ -37,8 +37,8 @@ public class GuestReservationService extends ReservationService {
         validateMapExistence(mapId);
         validateTime(reservationCreateUpdateWithPasswordRequest);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, reservationCreateUpdateWithPasswordRequest.getStartDateTime(), reservationCreateUpdateWithPasswordRequest.getEndDateTime())
-                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
+        Space space = spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new);
+//                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
         validateAvailability(space, reservationCreateUpdateWithPasswordRequest);
 
         Reservation reservation = reservations.save(
@@ -74,8 +74,8 @@ public class GuestReservationService extends ReservationService {
     public ReservationFindResponse findReservations(final Long mapId, final Long spaceId, final LocalDate date) {
         validateMapExistence(mapId);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, date.atStartOfDay(), date.atStartOfDay().plusDays(1))
-                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
+        Space space = spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new);
+//                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
 //        List<Reservation> reservations = getReservations(Collections.singletonList(space), date);
         List<Reservation> reservations = space.getReservationsByDate(date);
 
@@ -86,12 +86,12 @@ public class GuestReservationService extends ReservationService {
     public ReservationFindAllResponse findAllReservations(final Long mapId, final LocalDate date) {
         validateMapExistence(mapId);
 
-        List<Space> findSpaces = spaces.findAllWithReservationsAfterTime(mapId, date.atStartOfDay(), date.atStartOfDay().plusDays(1));
-        if(findSpaces.isEmpty()) {
-            findSpaces = spaces.findAll().stream()
-                    .map(space -> Space.of(space, Collections.emptyList()))
-                    .collect(Collectors.toList());
-        }
+        List<Space> findSpaces = spaces.findAllByMapId(mapId);
+//        if(findSpaces.isEmpty()) {
+//            findSpaces = spaces.findAll().stream()
+//                    .map(space -> Space.of(space, Collections.emptyList()))
+//                    .collect(Collectors.toList());
+//        }
 
         List<Reservation> reservations = findSpaces.stream()
                 .flatMap(space -> space.getReservationsByDate(date).stream())
@@ -109,8 +109,8 @@ public class GuestReservationService extends ReservationService {
 
         validateTime(reservationCreateUpdateWithPasswordRequest);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, reservationCreateUpdateWithPasswordRequest.getStartDateTime(), reservationCreateUpdateWithPasswordRequest.getEndDateTime())
-                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
+        Space space = spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new);
+//                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
         Reservation reservation = reservations
                 .findById(reservationId)
                 .orElseThrow(NoSuchReservationException::new);

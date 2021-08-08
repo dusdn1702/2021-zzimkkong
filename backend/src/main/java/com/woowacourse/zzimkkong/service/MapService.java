@@ -110,12 +110,13 @@ public class MapService {
     }
 
     private void validateExistReservations(Long mapId) {
-        List<Space> findSpaces = spaces.findAllWithReservationsAfterTime(mapId, LocalDateTime.now(), LocalDateTime.MAX);
-        if(findSpaces.isEmpty()) {
-            findSpaces = spaces.findAll().stream()
-                    .map(space -> Space.of(space, Collections.emptyList()))
-                    .collect(Collectors.toList());
-        }
+        List<Space> findSpaces = spaces.findAllByMapId(mapId);
+
+//        if(findSpaces.isEmpty()) {
+//            findSpaces = spaces.findAll().stream()
+//                    .map(space -> Space.of(space, Collections.emptyList()))
+//                    .collect(Collectors.toList());
+//        }
 
         boolean isExistReservationInAnySpace = findSpaces.stream()
                 .anyMatch(space -> !space.getReservations().isEmpty());

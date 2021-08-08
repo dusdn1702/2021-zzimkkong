@@ -77,8 +77,8 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now(), LocalDateTime.MAX)
-                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
+        Space space = spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new);
+//                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
         return SpaceFindDetailResponse.from(space);
     }
 
@@ -90,12 +90,13 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        List<Space> findAllSpaces = spaces.findAllWithReservationsAfterTime(mapId, LocalDateTime.now(), LocalDateTime.MAX);
-        if(findAllSpaces.isEmpty()) {
-            findAllSpaces = spaces.findAll().stream()
-                    .map(space -> Space.of(space, Collections.emptyList()))
-                    .collect(Collectors.toList());
-        }
+        List<Space> findAllSpaces = spaces.findAllByMapId(mapId);
+
+//        if(findAllSpaces.isEmpty()) {
+//            findAllSpaces = spaces.findAll().stream()
+//                    .map(space -> Space.of(space, Collections.emptyList()))
+//                    .collect(Collectors.toList());
+//        }
 
         return SpaceFindAllResponse.from(findAllSpaces);
     }
@@ -109,8 +110,8 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now(), LocalDateTime.MAX)
-                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
+        Space space = spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new);
+//                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
         Space updateSpace = getUpdateSpace(spaceCreateUpdateRequest, map);
 
         space.update(updateSpace);
@@ -124,8 +125,8 @@ public class SpaceService {
                 .orElseThrow(NoSuchMapException::new);
         validateAuthorityOnMap(manager, map);
 
-        Space space = spaces.findByIdWithAfterTodayReservations(spaceId, LocalDateTime.now(), LocalDateTime.MAX)
-                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
+        Space space = spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new);
+//                .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
 
         validateReservationExistence(space);
 //        validateReservationExistence(spaceId);

@@ -125,7 +125,7 @@ class SpaceServiceTest extends ServiceTest {
         // given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+        given(spaces.findById(anyLong()))
                 .willReturn(Optional.of(BE));
 
         // when
@@ -142,7 +142,7 @@ class SpaceServiceTest extends ServiceTest {
         // given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+        given(spaces.findById(anyLong()))
                 .willReturn(Optional.empty());
 
         // when, then
@@ -156,7 +156,7 @@ class SpaceServiceTest extends ServiceTest {
         // given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+        given(spaces.findById(anyLong()))
                 .willReturn(Optional.of(BE));
 
         // when, then
@@ -170,7 +170,7 @@ class SpaceServiceTest extends ServiceTest {
         // given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findAllWithReservationsAfterTime(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+        given(spaces.findAllByMapId(anyLong()))
                 .willReturn(List.of(BE, FE1));
 
         // when
@@ -199,7 +199,7 @@ class SpaceServiceTest extends ServiceTest {
         // given, when
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+        given(spaces.findById(anyLong()))
                 .willReturn(Optional.of(FE1));
         given(storageUploader.upload(anyString(), any(File.class)))
                 .willReturn(MAP_IMAGE_URL);
@@ -221,7 +221,7 @@ class SpaceServiceTest extends ServiceTest {
         // given, when
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+        given(spaces.findById(anyLong()))
                 .willReturn(Optional.of(BE));
 
         // then
@@ -241,7 +241,7 @@ class SpaceServiceTest extends ServiceTest {
 
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+        given(spaces.findById(anyLong()))
                 .willReturn(Optional.of(BE));
 //        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
 //                .willReturn(false);
@@ -268,7 +268,7 @@ class SpaceServiceTest extends ServiceTest {
         //given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+        given(spaces.findById(anyLong()))
                 .willReturn(Optional.empty());
 
         //then
@@ -282,7 +282,7 @@ class SpaceServiceTest extends ServiceTest {
         //given
         given(maps.findById(anyLong()))
                 .willReturn(Optional.of(LUTHER));
-        given(spaces.findByIdWithAfterTodayReservations(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+        given(spaces.findById(anyLong()))
                 .willReturn(Optional.of(BE));
 //        given(reservations.existsBySpaceIdAndEndTimeAfter(anyLong(), any(LocalDateTime.class)))
 //                .willReturn(true);

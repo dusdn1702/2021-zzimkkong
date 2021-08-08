@@ -64,7 +64,7 @@ class SpaceRepositoryTest extends RepositoryTest {
     void findAllByMapId() {
 
         // when
-        List<Space> actual = spaces.findAllWithReservationsAfterTime(LUTHER.getId(), THE_DAY_AFTER_TOMORROW_START_TIME, THE_DAY_AFTER_TOMORROW_START_TIME.plusDays(1).withHour(0).withMinute(0).withSecond(0));
+        List<Space> actual = spaces.findAllByMapId(LUTHER.getId());
 
         // then
         assertThat(actual).usingRecursiveComparison()
@@ -77,7 +77,7 @@ class SpaceRepositoryTest extends RepositoryTest {
     @Disabled
     @Transactional
     void findByIdTest() {
-        Space be = spaces.findByIdWithAfterTodayReservations(1L, THE_DAY_AFTER_TOMORROW_START_TIME, THE_DAY_AFTER_TOMORROW_START_TIME.plusDays(1).withHour(0).withMinute(0).withSecond(0))
+        Space be = spaces.findById(1L)
                 .orElseThrow(IllegalAccessError::new);
 //                .orElse(Space.of(spaces.findById(1L).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
 //                .orElse(spaces.findByIdWithEmptyReservations(1L).orElseThrow(NoSuchSpaceException::new));

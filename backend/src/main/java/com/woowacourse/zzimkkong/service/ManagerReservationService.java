@@ -68,13 +68,13 @@ public class ManagerReservationService extends ReservationService {
 
         List<Space> findSpaces = spaces.findAllWithReservationsAfterTime(mapId, date.atStartOfDay(), date.atStartOfDay().plusDays(1));
         if(findSpaces.isEmpty()) {
-            findSpaces = spaces.findAll().stream()
+            findSpaces = spaces.findAllByMapId(mapId).stream()
                     .map(space -> Space.of(space, Collections.emptyList()))
                     .collect(Collectors.toList());
         }
 
         List<Reservation> reservations = findSpaces.stream()
-                .flatMap(space -> space.getReservationsByDate(date).stream())
+                .flatMap(space -> space.getReservations().stream())
                 .collect(Collectors.toList());
 
         return ReservationFindAllResponse.of(findSpaces, reservations);
@@ -91,7 +91,7 @@ public class ManagerReservationService extends ReservationService {
         Space space = spaces.findByIdWithAfterTodayReservations(spaceId, date.atStartOfDay(), date.atStartOfDay().plusDays(1))
                 .orElse(Space.of(spaces.findById(spaceId).orElseThrow(NoSuchSpaceException::new), Collections.emptyList()));
 //        List<Reservation> reservations = getReservations(Collections.singletonList(space), date);
-        List<Reservation> reservations = space.getReservationsByDate(date);
+        List<Reservation> reservations = space.getReservations();
 
         return ReservationFindResponse.from(reservations);
     }

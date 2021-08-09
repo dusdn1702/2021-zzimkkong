@@ -1,5 +1,6 @@
 package com.woowacourse.zzimkkong.controller;
 
+import com.woowacourse.zzimkkong.PerformanceLogging;
 import com.woowacourse.zzimkkong.domain.Manager;
 import com.woowacourse.zzimkkong.domain.Member;
 import com.woowacourse.zzimkkong.dto.space.SpaceCreateResponse;
@@ -33,24 +34,20 @@ public class SpaceController {
                 .build();
     }
 
+    @PerformanceLogging
     @GetMapping
     public ResponseEntity<SpaceFindAllResponse> findAll(@PathVariable final Long mapId, @Manager final Member manager) {
-        long start = System.currentTimeMillis();
         SpaceFindAllResponse spaceFindAllResponse = spaceService.findAllSpace(mapId, manager);
-        long end = System.currentTimeMillis() - start;
-        System.out.println("모든 공간 조회: " + end);
         return ResponseEntity.ok().body(spaceFindAllResponse);
     }
 
+    @PerformanceLogging
     @GetMapping("/{spaceId}")
     public ResponseEntity<SpaceFindDetailResponse> find(
             @PathVariable final Long mapId,
             @PathVariable final Long spaceId,
             @Manager final Member manager) {
-        long start = System.currentTimeMillis();
         SpaceFindDetailResponse spaceFindDetailResponse = spaceService.findSpace(mapId, spaceId, manager);
-        long end = System.currentTimeMillis() - start;
-        System.out.println("공간 조회: " + end);
         return ResponseEntity.ok().body(spaceFindDetailResponse);
     }
 

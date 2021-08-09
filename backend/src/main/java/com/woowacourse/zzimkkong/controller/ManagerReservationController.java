@@ -1,5 +1,6 @@
 package com.woowacourse.zzimkkong.controller;
 
+import com.woowacourse.zzimkkong.PerformanceLogging;
 import com.woowacourse.zzimkkong.domain.Manager;
 import com.woowacourse.zzimkkong.domain.Member;
 import com.woowacourse.zzimkkong.dto.reservation.*;
@@ -43,37 +44,31 @@ public class ManagerReservationController {
                 .build();
     }
 
+    @PerformanceLogging
     @GetMapping("/reservations")
     public ResponseEntity<ReservationFindAllResponse> findAll(
             @PathVariable final Long mapId,
             @RequestParam @DateTimeFormat(pattern = DATE_FORMAT) final LocalDate date,
             @Manager final Member manager) {
-        long start = System.currentTimeMillis();
         ReservationFindAllResponse reservationFindAllResponse = reservationService.findAllReservations(
                 mapId,
                 date,
                 manager);
-        long end = System.currentTimeMillis() - start;
-        System.out.println("모든 예약 조회: " + end);
-
         return ResponseEntity.ok().body(reservationFindAllResponse);
     }
 
+    @PerformanceLogging
     @GetMapping("/{spaceId}/reservations")
     public ResponseEntity<ReservationFindResponse> find(
             @PathVariable final Long mapId,
             @PathVariable final Long spaceId,
             @RequestParam @DateTimeFormat(pattern = DATE_FORMAT) final LocalDate date,
             @Manager final Member manager) {
-        long start = System.currentTimeMillis();
         ReservationFindResponse reservationFindResponse = reservationService.findReservations(
                 mapId,
                 spaceId,
                 date,
                 manager);
-        long end = System.currentTimeMillis() - start;
-        System.out.println("특정 공간 예약 조회: " + end);
-
         return ResponseEntity.ok().body(reservationFindResponse);
     }
 
